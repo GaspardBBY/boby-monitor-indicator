@@ -1,7 +1,6 @@
 {
-  "uuid": "system-monitor-indicator@mknap.com",
-  "name": "System Monitor Tray Indicator",
-  "description": "Displays CPU, Memory and Swap usage on the top bar.",
+  "description": "Display system usage on the GNOME top bar.",
+  "name": "Linuxtricks System Monitor",
   "shell-version": [
     "45",
     "46",
@@ -9,6 +8,7 @@
     "48",
     "49"
   ],
-  "url": "https://github.com/michaelknap/gnome-system-monitor-indicator",
+  "url": "https://github.com/aaaaadrien/linuxtricks-monitor-indicator",
+  "uuid": "linuxtricks-monitor-indicator@aaaaadrien.github.com",
   "version": 4
 }

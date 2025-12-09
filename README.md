@@ -1,9 +1,7 @@
-[![Available on GNOME Extensions](https://img.shields.io/badge/Available%20on-GNOME%20Extensions-green)](https://extensions.gnome.org/extension/6586/system-monitor-tray-indicator/)
-
-# ![Icon](./screenshots/icon-xs.png) System Monitor Tray Indicator for GNOME Shell
+# System Monitor Tray Indicator for GNOME Shell
 
 ## Overview
-This is a minimalist system monitor extension for GNOME Shell. It displays CPU, RAM, and Swap usage right in your GNOME Shell top bar. 
+This is a minimalist system monitor extension for GNOME Shell. It displays CPU, RAM, Swap usage and loadaverage left in your GNOME Shell top bar. 
 
 ![Screenshot](./screenshots/screenshot.png)
 
@@ -20,14 +18,12 @@ It may be compatible with older versions, but no tests have been conducted to co
 
 ## Installation
 
-Install via [Gnome Extensions](https://extensions.gnome.org/extension/6586/system-monitor-tray-indicator/) page (recommended). 
-
-Or by downloading this repository. 
+Install via downloading this repository. 
 
 ```bash
 cd /tmp
-git clone https://github.com/michaelknap/gnome-system-monitor-indicator.git
-cd gnome-system-monitor-indicator
+git clone https://github.com/aaaaadrien/linuxtricks-monitor-indicator.git
+cd linuxtricks-monitor-indicator
 ./install.sh
 ```
 Once done, manually restart the GNOME Shell for the changes to take effect. On **X** you can do this by pressing 

@@ -1,9 +1,7 @@
 /*
- * System Monitor Tray Indicator
+ * Linuxtricks Monitor Indicator
  *
- * Author: Michael Knap
- * Description: Displays CPU, Memory and Swap usage on the top bar.
- * Version: 4.0
+ * Author: Adrien Linuxtricks (forked from Michael Knap)
  *
  * License: MIT License
  */
@@ -46,8 +44,15 @@ class SystemMonitorIndicator extends PanelMenu.Button {
         this._swapLabel = new St.Label({
             text: 'Swap: --%',
             y_align: Clutter.ActorAlign.CENTER,
+            style: 'margin-right: 12px;',
         });
         this._box.add_child(this._swapLabel);
+        
+        this._loadLabel = new St.Label({
+            text: 'Load: --%',
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+        this._box.add_child(this._loadLabel);
 
         this.add_child(this._box);
 
@@ -81,6 +86,7 @@ class SystemMonitorIndicator extends PanelMenu.Button {
     _updateMetrics() {
         this._updateCpuUsage();
         this._updateMemoryUsage();
+        this._updateLoadAverage();
     }
 
     _updateCpuUsage() {
@@ -198,6 +204,47 @@ class SystemMonitorIndicator extends PanelMenu.Button {
             logError(e, 'System Monitor Indicator: failed to update memory usage');
         }
     }
+    
+    _updateLoadAverage() {
+    try {
+        const file = Gio.File.new_for_path('/proc/loadavg');
+        const [, content] = file.load_contents(null);
+        
+        const decoder = new TextDecoder('utf-8');
+        const text = decoder.decode(content);
+        const fields = text.trim().split(/\s+/);
+
+        // Charge à 1 minute
+        const load1Min = parseFloat(fields[0]);
+
+        // Lire le nombre de cœurs de CPU
+        const cpuFile = Gio.File.new_for_path('/proc/stat');
+        const [, cpuContent] = cpuFile.load_contents(null);
+        const cpuDecoder = new TextDecoder('utf-8');
+        const cpuText = cpuDecoder.decode(cpuContent);
+        const cpuLines = cpuText.split('\n');
+        
+       let totalCpu = 0;
+
+        for (const line of cpuLines) {
+            const fields = line.trim().split(/\s+/);
+            // Vérifier si la ligne commence par 'cpu' suivi d'un chiffre
+            if(/^cpu\d+$/.test(fields[0])) {
+                totalCpu++; // Incrémente le compteur pour chaque CPU
+            } 
+        }
+
+        // Calcul du pourcentage de charge
+        const loadPercentage = (load1Min / totalCpu) * 100;
+
+        // Affichage
+        this._loadLabel.text = `Load : ${loadPercentage.toFixed(2)}% (${load1Min.toFixed(2)})`;
+        
+       } catch (e) {
+        logError(e, 'System Monitor Indicator: failed to update load average');
+       }
+    }
+
 
     destroy() {
         if (this._timeoutId) {
@@ -212,7 +259,8 @@ class SystemMonitorIndicator extends PanelMenu.Button {
 export default class SystemMonitorExtension extends Extension {
     enable() {
         this._indicator = new SystemMonitorIndicator();
-        Main.panel.addToStatusArea(this.uuid, this._indicator);
+        //Main.panel.addToStatusArea(this.uuid, this._indicator);
+        Main.panel.addToStatusArea(this.uuid, this._indicator, 1, 'left');
     }
 
     disable() {
