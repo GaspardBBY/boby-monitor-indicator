@@ -226,9 +226,26 @@ export default class SystemMonitorExtension extends Extension {
   enable() {
     this._indicator = new SystemMonitorIndicator();
     Main.panel.addToStatusArea(this.uuid, this._indicator, 0, "right");
+
+    // Specific targeting for GNOME 45+ (Quick Settings)
+    const quickSettings = Main.panel.statusArea.quickSettings;
+    if (quickSettings && quickSettings._system) {
+      // Retrieve the system battery indicator
+      this._systemBatteryIndicator = quickSettings._system._indicator;
+      if (this._systemBatteryIndicator) {
+        // Hide the original icon
+        this._systemBatteryIndicator.hide();
+      }
+    }
   }
 
   disable() {
+    // Show the original icon again before exiting
+    if (this._systemBatteryIndicator) {
+      this._systemBatteryIndicator.show();
+      this._systemBatteryIndicator = null;
+    }
+
     if (this._indicator) {
       this._indicator.destroy();
       this._indicator = null;

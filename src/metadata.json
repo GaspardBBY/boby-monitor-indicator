@@ -1,7 +1,7 @@
 {
   "description": "Display system usage & battery status on the GNOME top bar.",
   "name": "Boby System Monitor",
-  "shell-version": ["45", "46", "47", "48", "49"],
+  "shell-version": ["49"],
   "url": "https://github.com/GaspardBBY/boby-monitor-indicator",
   "uuid": "boby-monitor-indicator@GaspardBBY.github.com",
   "version": 4
