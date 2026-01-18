@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schemalist>
+  <schema
+        id="org.gnome.shell.extensions.boby-monitor-indicator"
+        path="/org/gnome/shell/extensions/boby-monitor-indicator/"
+    >
+    <key name="update-interval" type="i">
+      <default>5</default>
+    </key>
+    <key name="show-cpu" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-mem" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-watts" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-time" type="b">
+      <default>true</default>
+    </key>
+  </schema>
+</schemalist>

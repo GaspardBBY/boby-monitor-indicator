@@ -22,8 +22,14 @@ const UPDATE_INTERVAL_SECONDS = 5;
 
 const SystemMonitorIndicator = GObject.registerClass(
   class SystemMonitorIndicator extends PanelMenu.Button {
-    _init() {
+    _init(settings) {
       super._init(0.0, "System Monitor Indicator", false);
+      if (!settings) {
+        log("Boby Monitor: Error - Settings not provided to indicator");
+        return;
+      }
+
+      this._settings = settings;
 
       this._box = new St.BoxLayout();
       const labelStyle = "margin-right: 12px; font-family: monospace;";
@@ -79,6 +85,26 @@ const SystemMonitorIndicator = GObject.registerClass(
       this._prevTotal = 0;
       this._timeoutId = 0;
       this._scheduleUpdate(true);
+
+      const keys = ["show-cpu", "show-mem", "show-watts", "show-time"];
+      keys.forEach((key) => {
+        this._settings.connect(`changed::${key}`, () =>
+          this._updateVisibility(),
+        );
+      });
+      this._settings.connect("changed::update-interval", () =>
+        this._scheduleUpdate(),
+      );
+
+      this._updateVisibility();
+    }
+
+    _updateVisibility() {
+      this._cpuLabel.visible = this._settings.get_boolean("show-cpu");
+      this._memLabel.visible = this._settings.get_boolean("show-mem");
+      this._powerLabel.visible = this._settings.get_boolean("show-watts");
+      this._timeLabel.visible = this._settings.get_boolean("show-time");
+      this._updateMetrics();
     }
 
     _updateBatteryAndPower() {
@@ -222,33 +248,30 @@ const SystemMonitorIndicator = GObject.registerClass(
   },
 );
 
-export default class SystemMonitorExtension extends Extension {
+export default class BobyMonitorExtension extends Extension {
   enable() {
-    this._indicator = new SystemMonitorIndicator();
+    this._settings = this.getSettings(
+      "org.gnome.shell.extensions.boby-monitor-indicator",
+    );
+
+    this._indicator = new SystemMonitorIndicator(this._settings);
+
     Main.panel.addToStatusArea(this.uuid, this._indicator, 0, "right");
 
-    // Specific targeting for GNOME 45+ (Quick Settings)
-    const quickSettings = Main.panel.statusArea.quickSettings;
-    if (quickSettings && quickSettings._system) {
-      // Retrieve the system battery indicator
-      this._systemBatteryIndicator = quickSettings._system._indicator;
-      if (this._systemBatteryIndicator) {
-        // Hide the original icon
-        this._systemBatteryIndicator.hide();
-      }
-    }
+    const qs = Main.panel.statusArea.quickSettings;
+    if (qs && qs._system) qs._system._indicator.hide();
   }
 
   disable() {
-    // Show the original icon again before exiting
-    if (this._systemBatteryIndicator) {
-      this._systemBatteryIndicator.show();
-      this._systemBatteryIndicator = null;
+    if (this._settings) {
+      this._settings.run_dispose();
+      this._settings = null;
     }
 
-    if (this._indicator) {
-      this._indicator.destroy();
-      this._indicator = null;
-    }
+    const qs = Main.panel.statusArea.quickSettings;
+    if (qs && qs._system) qs._system._indicator.show();
+
+    this._indicator.destroy();
+    this._indicator = null;
   }
 }

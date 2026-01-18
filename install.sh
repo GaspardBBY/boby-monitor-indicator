@@ -1,8 +1,16 @@
 #!/bin/bash
-EXTENSION_PATH="$HOME/.local/share/gnome-shell/extensions/boby-monitor-indicator@GaspardBBY.github.com"
+# Nouvel UUID
+UUID="boby-monitor-indicator@GaspardBBY.github.com"
+EXTENSION_PATH="$HOME/.local/share/gnome-shell/extensions/$UUID"
 
-mkdir -p $EXTENSION_PATH
-cp -r ./src/* $EXTENSION_PATH
+mkdir -p "$EXTENSION_PATH/schemas"
 
-# Restart GNOME Shell
-echo "Restart the gnome-shell and enable extension in gnome-extensions."
+cp ./src/*.js "$EXTENSION_PATH/"
+cp ./src/metadata.json "$EXTENSION_PATH/"
+cp ./src/schemas/*.xml "$EXTENSION_PATH/schemas/"
+
+# Compilation avec le nouveau nom
+glib-compile-schemas "$EXTENSION_PATH/schemas/"
+
+echo "Installé sous : $UUID"
+echo "Relancez votre session pour activer Boby System Monitor !"
