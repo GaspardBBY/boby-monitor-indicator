@@ -113,10 +113,27 @@ const SystemMonitorIndicator = GObject.registerClass(
     }
 
     _updateMetrics() {
-      this._updateCpuUsage();
-      this._updateMemoryAndSwap();
-      this._updateLoadAverage();
-      this._updateBatteryAndPower();
+      if (this._settings.get_boolean("show-cpu")) {
+        this._updateCpuUsage();
+      }
+
+      if (
+        this._settings.get_boolean("show-mem") ||
+        this._settings.get_boolean("show-swap")
+      ) {
+        this._updateMemoryAndSwap();
+      }
+
+      if (this._settings.get_boolean("show-load")) {
+        this._updateLoadAverage();
+      }
+
+      if (
+        this._settings.get_boolean("show-watts") ||
+        this._settings.get_boolean("show-time")
+      ) {
+        this._updateBatteryAndPower();
+      }
     }
 
     _updateCpuUsage() {
