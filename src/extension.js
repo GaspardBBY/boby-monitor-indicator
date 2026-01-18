@@ -75,13 +75,6 @@ const SystemMonitorIndicator = GObject.registerClass(
       });
       this.menu.addMenuItem(this._thresholdItem);
 
-      this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-
-      this._modelItem = new PopupMenu.PopupMenuItem("Model: --", {
-        reactive: false,
-      });
-      this.menu.addMenuItem(this._modelItem);
-
       this._prevUsed = 0;
       this._prevTotal = 0;
       this._timeoutId = 0;
@@ -109,7 +102,6 @@ const SystemMonitorIndicator = GObject.registerClass(
         const chargeFull = parseInt(readBat("charge_full"));
         const chargeDesign = parseInt(readBat("charge_full_design"));
         const cycles = readBat("cycle_count");
-        const model = readBat("model_name");
 
         // 1. CALCULATE REMAINING TIME
         let timeStr = "";
@@ -137,7 +129,6 @@ const SystemMonitorIndicator = GObject.registerClass(
           this._healthItem.label.text = `Battery health: ${health}%`;
         }
         this._cyclesItem.label.text = `Completed cycles: ${cycles || "--"}`;
-        this._modelItem.label.text = `Model: ${model || "--"}`;
 
         const startT = readBat("charge_control_start_threshold");
         const endT = readBat("charge_control_end_threshold");
@@ -235,5 +226,12 @@ export default class SystemMonitorExtension extends Extension {
   enable() {
     this._indicator = new SystemMonitorIndicator();
     Main.panel.addToStatusArea(this.uuid, this._indicator, 0, "right");
+  }
+
+  disable() {
+    if (this._indicator) {
+      this._indicator.destroy();
+      this._indicator = null;
+    }
   }
 }
