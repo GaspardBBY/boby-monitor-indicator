@@ -103,7 +103,6 @@ const SystemMonitorIndicator = GObject.registerClass(
       this._cpuLabel.visible = this._settings.get_boolean("show-cpu");
       this._memLabel.visible = this._settings.get_boolean("show-mem");
       this._powerLabel.visible = this._settings.get_boolean("show-watts");
-      this._timeLabel.visible = this._settings.get_boolean("show-time");
       this._updateMetrics();
     }
 
@@ -129,9 +128,10 @@ const SystemMonitorIndicator = GObject.registerClass(
         const chargeDesign = parseInt(readBat("charge_full_design"));
         const cycles = readBat("cycle_count");
 
-        // 1. CALCULATE REMAINING TIME
+        const showTime = this._settings.get_boolean("show-time"); // On lit le paramètre ici
+
         let timeStr = "";
-        if (current > 0) {
+        if (showTime && current > 0) {
           if (status === "Discharging") {
             const hours = chargeNow / current;
             timeStr = ` (${this._formatTime(hours)})`;
