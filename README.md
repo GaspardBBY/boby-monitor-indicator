@@ -5,14 +5,22 @@ This is a minimalist system monitor extension for GNOME Shell. It displays CPU, 
 
 ![Screenshot](./screenshots/screenshot.png)
 
+## Features
+
+- CPU usage
+- RAM usage
+- Swap usage
+- Load average
+- Battery status
+- Parameters
+
+![Screenshot](./screenshots/params.png)
+
+
 ## Compatibility
 
 Known supported versions of GNOME:
 - 49
-- 48
-- 47
-- 46
-- 45
 
 It may be compatible with older versions, but no tests have been conducted to confirm this.
 
@@ -22,8 +30,8 @@ Install via downloading this repository.
 
 ```bash
 cd /tmp
-git clone https://github.com/aaaaadrien/linuxtricks-monitor-indicator.git
-cd linuxtricks-monitor-indicator
+git clone https://github.com/GaspardBBY/boby-monitor-indicator.git
+cd boby-monitor-indicator
 ./install.sh
 ```
 Once done, manually restart the GNOME Shell for the changes to take effect. On **X** you can do this by pressing 
