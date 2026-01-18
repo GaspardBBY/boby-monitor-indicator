@@ -6,18 +6,32 @@
     >
     <key name="update-interval" type="i">
       <default>5</default>
+      <summary>Update interval</summary>
+      <description>Number of seconds between each data refresh.</description>
     </key>
     <key name="show-cpu" type="b">
       <default>true</default>
+      <summary>Show CPU</summary>
     </key>
     <key name="show-mem" type="b">
       <default>true</default>
+      <summary>Show RAM</summary>
+    </key>
+    <key name="show-swap" type="b">
+      <default>true</default>
+      <summary>Show Swap</summary>
+    </key>
+    <key name="show-load" type="b">
+      <default>true</default>
+      <summary>Show Load</summary>
     </key>
     <key name="show-watts" type="b">
       <default>true</default>
+      <summary>Show power consumption in Watts</summary>
     </key>
     <key name="show-time" type="b">
       <default>true</default>
+      <summary>Show remaining battery time</summary>
     </key>
   </schema>
 </schemalist>

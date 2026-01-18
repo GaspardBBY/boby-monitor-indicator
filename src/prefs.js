@@ -10,12 +10,16 @@ export default class SystemMonitorPrefs extends ExtensionPreferences {
     const settings = this.getSettings(
       "org.gnome.shell.extensions.boby-monitor-indicator",
     );
+
     const page = new Adw.PreferencesPage();
-    const group = new Adw.PreferencesGroup({
-      title: "Items to show in the bar",
-    });
     window.add(page);
-    page.add(group);
+
+    // --- SECTION: BAR ITEMS ---
+    const groupItems = new Adw.PreferencesGroup({
+      title: "Items to display in the bar",
+      description: "Choose the metrics to monitor in real time",
+    });
+    page.add(groupItems);
 
     const createSwitch = (title, key) => {
       const row = new Adw.ActionRow({ title: title });
@@ -25,19 +29,27 @@ export default class SystemMonitorPrefs extends ExtensionPreferences {
       });
       settings.bind(key, toggle, "active", Gio.SettingsBindFlags.DEFAULT);
       row.add_suffix(toggle);
+      row.activatable_widget = toggle; // Allows clicking on the whole row
       return row;
     };
 
-    group.add(createSwitch("Show CPU", "show-cpu"));
-    group.add(createSwitch("Show Memory", "show-mem"));
-    group.add(createSwitch("Show Power Consumption (Watts)", "show-watts"));
-    group.add(createSwitch("Show Remaining Battery Time", "show-time"));
+    groupItems.add(createSwitch("Show CPU (%)", "show-cpu"));
+    groupItems.add(createSwitch("Show Memory (RAM)", "show-mem"));
+    groupItems.add(createSwitch("Show Swap (Swap file)", "show-swap"));
+    groupItems.add(createSwitch("Show System Load", "show-load"));
+    groupItems.add(
+      createSwitch("Show Power Consumption (Watts)", "show-watts"),
+    );
+    groupItems.add(createSwitch("Show Remaining Battery Time", "show-time"));
 
-    const groupGeneral = new Adw.PreferencesGroup({ title: "General" });
+    // --- SECTION: GENERAL ---
+    const groupGeneral = new Adw.PreferencesGroup({
+      title: "General Settings",
+    });
     page.add(groupGeneral);
 
     const rowInterval = new Adw.ActionRow({
-      title: "Update interval (sec)",
+      title: "Update interval (seconds)",
     });
     const spin = new Gtk.SpinButton({
       adjustment: new Gtk.Adjustment({
@@ -47,12 +59,14 @@ export default class SystemMonitorPrefs extends ExtensionPreferences {
       }),
       valign: Gtk.Align.CENTER,
     });
+
     settings.bind(
       "update-interval",
       spin.get_adjustment(),
       "value",
       Gio.SettingsBindFlags.DEFAULT,
     );
+
     rowInterval.add_suffix(spin);
     groupGeneral.add(rowInterval);
   }
