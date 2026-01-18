@@ -4,5 +4,6 @@
   "shell-version": ["49"],
   "url": "https://github.com/GaspardBBY/boby-monitor-indicator",
   "uuid": "boby-monitor-indicator@GaspardBBY.github.com",
+  "settings-schema": "org.gnome.shell.extensions.boby-monitor-indicator",
   "version": 4
 }
